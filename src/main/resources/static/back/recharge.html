@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/layui.css" />
+    <script type="text/javascript" src="js/layui.js" ></script>
+    <style>
+        .err{
+            color: red;
+            font-weight: bold;
+        }
+        .ok{
+            color: #00FF00;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <form action="">
+        <div class="layui-form-item" style="position: relative">
+            <label class="layui-form-label">手机号：</label>
+            <div class="layui-input-block" style="height:38px;width: 250px;">
+                <input type="text" name="m_tel" required  lay-verify="required" placeholder="请输入手机号" autocomplete="off" class="layui-input " v-model="m_tel" @blur="tid">
+            </div>
+        </div>
+        <div id="result" v-html="result" style="position: absolute;top: 9px;left: 370px;color: #757575"></div>
+        <div class="layui-form-item" >
+            <label class="layui-form-label">会员编号：</label>
+            <div class="layui-input-block" style="width: 150px;">
+                <input type="text" name="m_id" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input layui-disabled" v-model="m_id" style="color: black!important;">
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <label class="layui-form-label">会员名：</label>
+            <div class="layui-input-block" style="width: 150px;">
+                <input type="text" name="m_name" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input layui-disabled" v-model="m_name" style="color: black!important;">
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <label class="layui-form-label">充值金额：</label>
+            <div class="layui-input-block" style="height:38px;width: 250px;">
+            <input type="text" name="m_point" autocomplete="off" class="layui-input " v-model="m_point" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" @click="sub">充值 </button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="js/axios.js" ></script>
+<script type="text/javascript" src="js/jquery-3.4.1.min.js" ></script>
+<script type="text/javascript" src="js/vue.js" ></script>
+<script>
+let vue=new Vue({
+   el:"#app",
+   data:{
+       m_tel:"",
+       m_name:"",
+       m_id:"",
+       m_point:"",
+       result:""
+   },
+    methods:{
+       sub:function () {
+
+
+       },
+       tid(){
+           var _this=this;
+           $.post("../user/finduser",{m_tel:this.m_tel},function(data){
+               console.log(data);
+               if(data.length!=0){
+                   _this.m_name=data[0].m_name;
+                   _this.m_id=data[0].m_id;
+               }else {
+                   _this.result="<span class='err'>该用户不存在，请重新输入</span>";
+                   _this.m_name="";
+                   _this.m_id="";
+               }
+           },"json");
+       }
+    }
+});
+</script>
+</body>
+</html>

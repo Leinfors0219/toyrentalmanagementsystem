@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/layui.css" />
+		<script type="text/javascript" src="js/layui.js" ></script>
+		<style>
+			.err{
+				color: red;
+				font-weight: bold;
+			}
+			.ok{
+				color: #00FF00;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+	<div id="app">
+		<form action="">
+			<div class="layui-form-item" >
+				<label class="layui-form-label">玩具编号：</label>
+				<div class="layui-input-block" style="height:38px;width: 250px;">
+					<input type="text" name="t_id" required  lay-verify="required" placeholder="请输入玩具编号" autocomplete="off" class="layui-input " v-model="t_id" @blur="tid">
+				</div>
+			</div>
+			<div class="layui-form-item" >
+				<label class="layui-form-label">玩具名称：</label>
+				<div class="layui-input-block" style="height:38px;width: 250px;">
+					<input type="text" name="t_name" autocomplete="off" class="layui-input layui-disabled" v-model="t_name" style="color: black!important;">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">价格：</label>
+				<div class="layui-input-block" style="width: 150px;">
+					<input type="text" name="t_price" autocomplete="off" class="layui-input layui-disabled" v-model="t_price" style="color: black!important;">
+				</div>
+			</div>
+			<div class="layui-form-item" style="position: relative">
+				<label class="layui-form-label">出租数量：</label>
+				<div class="layui-input-block" style="width: 150px;">
+					<input type="text" name="t_num01" required  lay-verify="required" placeholder="请输入出租数量" autocomplete="off" class="layui-input" v-model="t_num01">
+				</div>
+				<div id="result" v-html="result" style="position: absolute;top: 9px;left: 270px;color: #757575"></div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit lay-filter="formDemo" @click="sub">出租</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="js/axios.js" ></script>
+	<script type="text/javascript" src="js/jquery-3.4.1.min.js" ></script>
+	<script type="text/javascript" src="js/vue.js" ></script>
+	<script>
+		let vm=new Vue({
+			el:"#app",
+			data:{
+				t_id:"",
+				t_name:"",
+				t_price:"",
+				t_num01:"",
+				result:""
+			},
+			methods:{
+				sub:function () {
+					$.post("../toy/toyslease",{t_id:this.t_id,t_num:this.t_num01},function(data){
+						console.log("data"+data);
+					},"json");
+				},
+				tid(){
+					var _this=this;
+					$.post("../toy/findtoy",{t_id:this.t_id},function(data){
+						//console.log(data[0].t_name);
+						_this.t_name=data[0].t_name;
+						_this.t_price=data[0].t_price;
+						if(data[0].t_num>0){
+							_this.result="剩余库存为<span class='ok'>"+data[0].t_num+"</span>";
+						}else {
+							_this.result="<span class='err'>剩余库存为"+data[0].t_num+"不可出租</span>";
+						}
+					},"json");
+				}
+			}
+		});
+	</script>
+	</body>
+</html>

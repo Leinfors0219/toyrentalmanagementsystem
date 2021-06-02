@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>玩具添加</title>
+  <link rel="stylesheet" href="css/layui.css" />
+  <script type="text/javascript" src="js/layui.js" ></script>
+  <style>
+    #layselect{
+      width: 100%;
+      height: 38px;
+      border: solid 1px #e6e6e6;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+	<form action="">
+  <div class="layui-form-item" >
+    <label class="layui-form-label">玩具名称：</label>
+    <div class="layui-input-block" style="height:38px;width: 250px;">
+      <input type="text" name="t_name" required  lay-verify="required" placeholder="请输入玩具名称" autocomplete="off" class="layui-input" v-model="t_name">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">玩具类型：</label>
+    <div class="layui-input-block" style="width: 250px;">
+      <select id="layselect" name="category" lay-filter="status" v-model="c_id">
+<!--        <option  v-for="(a,b) in category" value="a.c_id">{{a.c_name}}</option>-->
+        <option value=""></option>
+        <option value="1">炫酷机甲</option>
+        <option value="2">休闲益智</option>
+        <option value="3">遥控赛车</option>
+        <option value="4">洋娃娃</option>
+        <option value="5">玩具飞机</option>
+        <option value="6">数码游戏</option>
+        <option value="7">模拟枪械</option>
+        <option value="8">其他</option>
+      </select>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">价格：</label>
+    <div class="layui-input-block" style="width: 150px;">
+      <input type="text" name="t_price" required  lay-verify="required" placeholder="￥" autocomplete="off" class="layui-input" v-model="t_price">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">入库数量：</label>
+    <div class="layui-input-block" style="width: 150px;">
+      <input type="text" name="t_num" required  lay-verify="required" placeholder="请输入入库数量" autocomplete="off" class="layui-input" v-model="t_num">
+    </div>
+  </div>
+  <div class="layui-form-item layui-form-text">
+    <label class="layui-form-label">详情介绍</label>
+    <div class="layui-input-block" style="width: 500px;">
+      <textarea name="t_introduce" placeholder="" class="layui-textarea" v-model="t_introduce"></textarea>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="formDemo" @click="sub">添加玩具</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+</div>
+<script type="text/javascript" src="js/axios.js" ></script>
+<script type="text/javascript" src="js/jquery-3.4.1.min.js" ></script>
+<script type="text/javascript" src="js/vue.js" ></script>
+<script>
+    let vm=new Vue({
+        el: "#app",
+        data: {
+            t_name:"",
+            c_id:"",
+            t_price:"",
+            t_num:"",
+            t_introduce:"",
+            category:""
+        },
+        created(){
+          this.request();
+        },
+        methods: {
+          // request(){
+          //   var _this=this;
+          //   $.post("../category/findall",function(data){
+          //     var jsonStr = JSON.stringify(data);
+          //     console.log(jsonStr)
+          //     _this.category=[{"c_id":1,"c_name":"炫酷机甲"},
+          //       {"c_id":2,"c_name":"休闲益智"},
+          //       {"c_id":3,"c_name":"遥控赛车"},
+          //       {"c_id":4,"c_name":"洋娃娃"},
+          //       {"c_id":5,"c_name":"玩具飞机"},
+          //       {"c_id":6,"c_name":"数码游戏"},
+          //       {"c_id":7,"c_name":"模拟枪械"},
+          //       {"c_id":8,"c_name":"其他"}];
+          //   },"json");
+          // },
+          sub: function () {
+            $.post("../toy/toysadd",{t_name:this.t_name,c_id:this.c_id,t_price:this.t_price,t_num:this.t_num,t_introduce:this.t_introduce},function(data){
+              console.log("data"+data)
+              if(data!=null){
+                alert("添加成功");
+              }else{
+                alert("添加失败");
+              }
+            },"json");
+          }
+        }
+    });
+</script>
+</body>
+</html>

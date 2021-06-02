@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/layui.css" />
+    <script type="text/javascript" src="js/layui.js" ></script>
+</head>
+<body>
+<div id="app">
+    <form action="">
+        <div class="layui-form-item" >
+            <label class="layui-form-label">用户名：</label>
+            <div class="layui-input-block" style="height:38px;width: 250px;">
+                <input type="text" name="m_name" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" v-model="m_name">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">家庭住址：</label>
+            <div class="layui-input-block" style="width: 250px;">
+                <input type="text" name="m_address" required  lay-verify="required" placeholder="请输入用户家庭住址" autocomplete="off" class="layui-input" v-model="m_address">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话号码：</label>
+            <div class="layui-input-block" style="width: 250px;">
+                <input type="text" name="m_tel" required  lay-verify="required" placeholder="请输会员电话号码" autocomplete="off" class="layui-input" v-model="m_tel">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">充值点数：</label>
+            <div class="layui-input-block" style="width: 250px;">
+                <input type="text" name="m_point" required  lay-verify="required" placeholder="请输入充值点数" autocomplete="off" class="layui-input" v-model="m_point">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" @click="sub">添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="js/axios.js" ></script>
+<script type="text/javascript" src="js/jquery-3.4.1.min.js" ></script>
+<script type="text/javascript" src="js/vue.js" ></script>
+<script>
+    let vue=new Vue({
+        el:"#app",
+        data:{
+            m_name:"",
+            m_address:"",
+            m_tel:"",
+            m_point:"",
+        },
+        methods:{
+            sub:function () {
+                $.post("../user/useradd",{m_name:this.m_name,m_address:this.m_address,m_tel:this.m_tel,m_point:this.m_point},function(data){
+                    console.log("data"+data)
+                    if(data!=null){
+                        alert("添加成功");
+                    }else{
+                        alert("添加失败");
+                    }
+                },"json");
+            }
+        }
+    });
+</script>
+</body>
+</html>

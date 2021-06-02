@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/layui.css" />
+		<script type="text/javascript" src="js/layui.js" ></script>
+		<style>
+			#layselect{
+				width: 20%;
+				height: 38px;
+				border: solid 1px #e6e6e6;
+			}
+		</style>
+	</head>
+	<body>
+	<div id="app">
+		<form action="">
+			<div class="layui-form-item" >
+				<label class="layui-form-label">玩具编号：</label>
+				<div class="layui-input-block" style="height:38px;width: 250px;">
+					<input type="text" name="t_id" required  lay-verify="required" placeholder="请输入玩具编号" autocomplete="off" class="layui-input " v-model="t_id">
+				</div>
+			</div>
+			<div class="layui-form-item" >
+				<label class="layui-form-label">玩具名称：</label>
+				<div class="layui-input-block" style="height:38px;width: 250px;">
+					<input type="text" name="t_name" autocomplete="off" class="layui-input layui-disabled" v-model="t_name">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">是否损坏：</label>
+				<div class="layui-input-block" style="width: 250px;">
+					<select id="layselect" name="category" lay-filter="status" v-model="t_scrap">
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">归还数量：</label>
+				<div class="layui-input-block" style="width: 150px;">
+					<input type="text" name="t_num" required  lay-verify="required" placeholder="请输入出租数量" autocomplete="off" class="layui-input" v-model="t_num01">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit lay-filter="formDemo" @click="sub">归还</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	</body>
+</html>

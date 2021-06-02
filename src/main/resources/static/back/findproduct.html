@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="css/layui.css"  media="all">
+	</head>
+	<body>
+<!--	<div class="demoTable">-->
+<!--		搜索玩具：-->
+<!--		<div class="layui-inline">-->
+<!--			<input class="layui-input" name="keyword" id="demoReload" autocomplete="off">-->
+<!--		</div>-->
+<!--		<button class="layui-btn" data-type="reload">搜索</button>-->
+<!--	</div>-->
+<!--	<table class="layui-table" lay-data="{height:315, url:'../demo/findtoys', page:true, id:'test'}" lay-filter="test">-->
+<!--		<thead>-->
+<!--		<tr>-->
+<!--			<th lay-data="{field:'t_id', width:80, sort: true}">ID</th>-->
+<!--			<th lay-data="{field:'t_name', width:120}">玩具名称</th>-->
+<!--			<th lay-data="{field:'date', width:120,sort: true}">入库日期</th>-->
+<!--			<th lay-data="{field:'t_price', width:80}">价格</th>-->
+<!--			<th lay-data="{field:'t_scrap',width:120, sort: true}">是否损坏</th>-->
+<!--			<th lay-data="{field:'c_id', width:80,sort: true}">类型</th>-->
+<!--			<th lay-data="{field:'t_num', width:80}">库存</th>-->
+<!--			<th lay-data="{field:'t_introduce'}">玩具简介</th>-->
+<!--		</tr>-->
+<!--		</thead>-->
+<!--	</table>-->
+	<table class="layui-hide" id="test"></table>
+<!--	<script type="text/html" id="barDemo">-->
+<!--		<a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del" style="height: 26px;line-height:26px">删除</a>-->
+<!--	</script>-->
+
+	<script src="js/layui.all.js" charset="utf-8"></script>
+
+	<script>
+		layui.use('table', function(){
+			var table = layui.table;
+			table.render({
+				elem: '#test'
+				,url:'../toy/findtoys'
+				,parseData:function(res){
+					return{
+						"code":0,
+						"msg":"",
+						"count":"",
+						"data":res
+					}
+				}
+				,cols: [[
+					{field:'t_id', width:80, title: 'ID', sort: true}
+					,{field:'t_name', width:200, title: '玩具名称'}
+					,{field:'date', width:165, title: '修改日期', sort: true}
+					,{field:'t_price', width:80, title: '价格'}
+					,{field:'t_scrap',width:120, title: '是否损坏', sort: true}
+					,{field:'c_id', width:90, title: '类型', sort: true}
+					,{field:'t_num', width:80, title: '库存'}
+					,{field:'t_introduce',title: '玩具简介'}
+					//,{field:'right', title: '操作', width:94,toolbar:"#barDemo"}
+				]]
+				//,page: true
+			});
+			var $ = layui.$, active = {
+				reload: function(){
+					var demoReload = $('#demoReload');
+					table.reload('testReload', {
+						where: {
+							keyword: demoReload.val()
+						}
+					});
+				}
+			};
+		});
+		$('.demoTable .layui-btn').on('click', function(){
+			var type = $(this).data('type');
+			active[type] ? active[type].call(this) : '';
+		});
+	</script>
+	</body>
+</html>

@@ -1,5 +1,6 @@
 package com.dtc.toyrentalmanagementsystem.dao;
 
+import com.dtc.toyrentalmanagementsystem.bean.BadToys;
 import com.dtc.toyrentalmanagementsystem.bean.Toys;
 
 import java.util.List;
@@ -25,5 +26,9 @@ public interface ToysDao{
     public Toys toylease(Toys toys);
 
     public Toys toyreturn(Toys toys);
+
+    public Toys badreturn(Toys toys);
+
+    public List<BadToys> findAllbad();
 
 }

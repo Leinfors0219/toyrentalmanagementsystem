@@ -67,14 +67,17 @@ let vue=new Vue({
    },
     methods:{
        sub:function () {
-
-
+           var params=new URLSearchParams();
+           params.append("m_id",this.m_id);
+           params.append("m_point",this.m_point);
+           axios.post("../user/rec",params);
        },
        tid(){
            var _this=this;
            $.post("../user/finduser",{m_tel:this.m_tel},function(data){
                console.log(data);
                if(data.length!=0){
+                   _this.result="";
                    _this.m_name=data[0].m_name;
                    _this.m_id=data[0].m_id;
                }else {

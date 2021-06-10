@@ -11,4 +11,10 @@ import java.util.List;
  */
 public interface SalesDao {
     public List<Sales> login(Sales sales);
+
+    public List<Sales> findAll();
+
+    public Sales findone(String s_name);
+
+    public Sales addsale(Sales sales);
 }

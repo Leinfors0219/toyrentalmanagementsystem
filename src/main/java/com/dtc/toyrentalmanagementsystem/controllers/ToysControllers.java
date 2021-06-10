@@ -1,5 +1,6 @@
 package com.dtc.toyrentalmanagementsystem.controllers;
 
+import com.dtc.toyrentalmanagementsystem.bean.BadToys;
 import com.dtc.toyrentalmanagementsystem.bean.Toys;
 import com.dtc.toyrentalmanagementsystem.dao.impl.ToyDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,23 @@ public class ToysControllers {
     public Toys toyslease(Toys toys){
         toyDao.toylease(toys);
         return toys;
+    }
+
+    @RequestMapping(value = "return")
+    public Toys toyreturn(Toys toys){
+        toyDao.toyreturn(toys);
+        return toys;
+    }
+
+    @RequestMapping(value = "badreturn")
+    public Toys badreturn(Toys toys){
+        toyDao.badreturn(toys);
+        return toys;
+    }
+
+    @RequestMapping(value = "findbad")
+    public List<BadToys> findbad(){
+        List<BadToys> list=toyDao.findAllbad();
+        return list;
     }
 }

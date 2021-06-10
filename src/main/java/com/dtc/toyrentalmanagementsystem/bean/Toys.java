@@ -21,4 +21,5 @@ public class Toys implements Serializable {
     private String c_id;//类型id
     private String t_introduce;//玩具介绍
     private int t_num;//库存
+    private String t_sc;//是否损坏
 }

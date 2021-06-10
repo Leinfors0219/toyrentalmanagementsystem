@@ -36,4 +36,10 @@ public class UserDaoImplTest {
     public void finduser(){
         userDao.finduser("12345678910");
     }
+
+    @Test
+    public void findone(){
+
+        userDao.findone("用户2");
+    }
 }

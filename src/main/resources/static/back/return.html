@@ -11,21 +11,38 @@
 				height: 38px;
 				border: solid 1px #e6e6e6;
 			}
+			.err{
+				 color: red;
+				 font-weight: bold;
+			}
+			.ok{
+				color: #00FF00;
+				font-weight: bold;
+			}
+
 		</style>
 	</head>
 	<body>
 	<div id="app">
 		<form action="">
-			<div class="layui-form-item" >
+			<div class="layui-form-item" style="position: relative">
+				<label class="layui-form-label">会员名：</label>
+				<div class="layui-input-block" style="height:38px;width: 250px;">
+					<input type="text" name="m_name" required  lay-verify="required" placeholder="请输入会员名" autocomplete="off" class="layui-input " v-model="m_name" @blur="mname">
+				</div>
+				<div id="result_m" v-html="result_m" style="position: absolute;top: 9px;left: 370px;color: #757575"></div>
+			</div>
+			<div class="layui-form-item"  style="position: relative">
 				<label class="layui-form-label">玩具编号：</label>
 				<div class="layui-input-block" style="height:38px;width: 250px;">
-					<input type="text" name="t_id" required  lay-verify="required" placeholder="请输入玩具编号" autocomplete="off" class="layui-input " v-model="t_id">
+					<input type="text" name="t_id" required  lay-verify="required" placeholder="请输入玩具编号" autocomplete="off" class="layui-input " v-model="t_id" @blur="tid">
 				</div>
+				<div id="result_t" v-html="result_t" style="position: absolute;top: 9px;left: 370px;color: #757575"></div>
 			</div>
 			<div class="layui-form-item" >
 				<label class="layui-form-label">玩具名称：</label>
 				<div class="layui-input-block" style="height:38px;width: 250px;">
-					<input type="text" name="t_name" autocomplete="off" class="layui-input layui-disabled" v-model="t_name">
+					<input type="text" name="t_name" autocomplete="off" readonly class="layui-input layui-disabled" v-model="t_name" style="color: black!important;">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -40,7 +57,7 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label">归还数量：</label>
 				<div class="layui-input-block" style="width: 150px;">
-					<input type="text" name="t_num" required  lay-verify="required" placeholder="请输入出租数量" autocomplete="off" class="layui-input" v-model="t_num01">
+					<input type="text" name="l_num" required  lay-verify="required" placeholder="请输入归还数量" autocomplete="off" class="layui-input" v-model="l_num">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -51,5 +68,94 @@
 			</div>
 		</form>
 	</div>
+	<script type="text/javascript" src="js/axios.js" ></script>
+	<script type="text/javascript" src="js/jquery-3.4.1.min.js" ></script>
+	<script type="text/javascript" src="js/vue.js" ></script>
+	<script>
+		let vm=new Vue({
+			el:"#app",
+			data:{
+				m_name:"",
+				t_id:"",
+				t_name:"",
+				t_scrap:"",
+				l_num:"",
+				result_m:"",
+				result_t:""
+			},
+			methods:{
+				sub: function () {
+					// $.post("../toy/toysadd",{t_name:this.t_name,l_num:this.l_num},function(data){
+					// 	console.log("data"+data)
+					// 	if(data!=null){
+					// 		alert("添加成功");
+					// 	}else{
+					// 		alert("添加失败");
+					// 	}
+					// },"json");
+					var params =new URLSearchParams();
+					params.append("l_num",this.l_num);
+					params.append("m_name",this.m_name);
+					axios.post('../lease/toyreturn',params).then(response=>{
+						if(response.data.code==1){
+							alert("出借成功")
+						}else {
+							alert("出借失败")
+						}
+					}).catch( function(error){
+						console.log(error);
+					});
+
+					var _this=this;
+					$.post("../toy/findtoy",{t_id:this.t_id},function(data){
+						var params01=new URLSearchParams();
+						params01.append("t_id",_this.t_id);
+						params01.append("t_scrap",_this.t_scrap);
+						params01.append("t_num",_this.l_num);
+						params01.append("t_name",_this.t_name);
+						params01.append("c_id",data[0].c_id);
+						//axios.post('../toy/return',params01);
+						// console.log(data);
+						if(data[0].t_sc==0){
+							axios.post('../toy/return',params01);
+						}else if(_this.t_scrap==1 && data[0].t_sc==1){
+							axios.post('../toy/badreturn',params01);
+						}
+					});
+
+				},
+				tid(){
+					var _this=this;
+					$.post("../toy/findtoy",{t_id:this.t_id},function(data){
+						//console.log(data[0].t_sc);
+						if(data.length>0){
+							_this.result_t="";
+							_this.t_name=data[0].t_name;
+						}else{
+							_this.result="";
+							_this.t_name="";
+							_this.t_price="";
+							_this.result_t="<span class='err'>无此编号</span>"
+						}
+					},"json");
+				},
+				mname(){
+					var _this=this;
+					$.post("../user/find",{m_name:this.m_name},function(data){
+						//console.log(data);
+						if(data.length==1){
+							_this.result_m="";
+						}else{
+							_this.result_m="<span class='err'>该用户不存在</span>";
+						}
+					},"json");
+				}
+			},
+			mounted(){
+
+			}
+		});
+	</script>
 	</body>
+
 </html>

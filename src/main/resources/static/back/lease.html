@@ -19,34 +19,43 @@
 	<body>
 	<div id="app">
 		<form action="">
-			<div class="layui-form-item" >
+			<div class="layui-form-item" style="position: relative">
+				<label class="layui-form-label">会员名：</label>
+				<div class="layui-input-block" style="height:38px;width: 250px;">
+					<input type="text" name="m_name" required  lay-verify="required" placeholder="请输入会员名" autocomplete="off" class="layui-input " v-model="m_name" @blur="mname">
+				</div>
+				<div id="result_m" v-html="result_m" style="position: absolute;top: 9px;left: 370px;color: #757575"></div>
+			</div>
+			<div class="layui-form-item" style="position: relative">
 				<label class="layui-form-label">玩具编号：</label>
 				<div class="layui-input-block" style="height:38px;width: 250px;">
 					<input type="text" name="t_id" required  lay-verify="required" placeholder="请输入玩具编号" autocomplete="off" class="layui-input " v-model="t_id" @blur="tid">
 				</div>
+				<div id="result0" v-html="result0" style="position: absolute;top: 9px;left: 370px;color: #757575"></div>
 			</div>
 			<div class="layui-form-item" >
 				<label class="layui-form-label">玩具名称：</label>
 				<div class="layui-input-block" style="height:38px;width: 250px;">
-					<input type="text" name="t_name" autocomplete="off" class="layui-input layui-disabled" v-model="t_name" style="color: black!important;">
+					<input type="text" name="t_name" autocomplete="off" readonly  class="layui-input layui-disabled" v-model="t_name" style="color: black!important;">
 				</div>
 			</div>
 			<div class="layui-form-item">
 				<label class="layui-form-label">价格：</label>
 				<div class="layui-input-block" style="width: 150px;">
-					<input type="text" name="t_price" autocomplete="off" class="layui-input layui-disabled" v-model="t_price" style="color: black!important;">
+					<input type="text" name="t_price" autocomplete="off" readonly  class="layui-input layui-disabled" v-model="t_price" style="color: black!important;">
 				</div>
 			</div>
 			<div class="layui-form-item" style="position: relative">
 				<label class="layui-form-label">出租数量：</label>
 				<div class="layui-input-block" style="width: 150px;">
-					<input type="text" name="t_num01" required  lay-verify="required" placeholder="请输入出租数量" autocomplete="off" class="layui-input" v-model="t_num01">
+					<input type="text" name="l_num" required  lay-verify="required" placeholder="请输入出租数量" autocomplete="off" class="layui-input" v-model="l_num">
 				</div>
 				<div id="result" v-html="result" style="position: absolute;top: 9px;left: 270px;color: #757575"></div>
 			</div>
+
 			<div class="layui-form-item">
 				<div class="layui-input-block">
-					<button class="layui-btn" lay-submit lay-filter="formDemo" @click="sub">出租</button>
+					<button class="layui-btn layui-btn-disabled" lay-submit lay-filter="formDemo" @click="sub" id="lease">出租</button>
 					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
 				</div>
 			</div>
@@ -62,28 +71,79 @@
 				t_id:"",
 				t_name:"",
 				t_price:"",
-				t_num01:"",
+				l_num:"",
+				m_name:"",
+				result0:"",
+				result_m:"",
 				result:""
 			},
 			methods:{
 				sub:function () {
-					$.post("../toy/toyslease",{t_id:this.t_id,t_num:this.t_num01},function(data){
-						console.log("data"+data);
-					},"json");
+					// $.post("../lease/toyslease",{t_id:this.t_id,t_name:this.t_name,l_num:this.l_num,m_name:this.m_name},function(data){
+					// 	console.log("data"+data);
+					// },"json");
+					var params =new URLSearchParams();
+					params.append("t_id",this.t_id);
+					params.append("t_name",this.t_name);
+					params.append("l_num",this.l_num);
+					params.append("m_name",this.m_name);
+					axios.post('../lease/toylease',params).then(response=>{
+						if(response.data.code==1){
+							alert("出借成功")
+						}else {
+							alert("出借失败")
+						}
+					}).catch( function(error){
+						console.log(error);
+					});
+
+					var params01=new URLSearchParams();
+					params01.append("t_id",this.t_id);
+					params01.append("t_num",this.l_num);
+					axios.post("../toy/toyslease",params01);
+
+					var params02=new URLSearchParams();
+					params02.append("m_name",this.m_name);
+					params02.append("m_point",this.t_price);
+					axios.post("../user/lease",params02);
 				},
 				tid(){
 					var _this=this;
 					$.post("../toy/findtoy",{t_id:this.t_id},function(data){
-						//console.log(data[0].t_name);
-						_this.t_name=data[0].t_name;
-						_this.t_price=data[0].t_price;
-						if(data[0].t_num>0){
-							_this.result="剩余库存为<span class='ok'>"+data[0].t_num+"</span>";
-						}else {
-							_this.result="<span class='err'>剩余库存为"+data[0].t_num+"不可出租</span>";
+						//console.log(data);
+						if(data.length>0){
+							_this.result0="";
+							_this.t_name=data[0].t_name;
+							_this.t_price=data[0].t_price;
+							if(data[0].t_num>0){
+								_this.result="剩余库存为<span class='ok'>"+data[0].t_num+"</span>";
+								$('#lease').removeClass("layui-btn-disabled").attr("disabled",false);
+							}else {
+								_this.result="<span class='err'>剩余库存为"+data[0].t_num+"不可出租</span>";
+								$('#lease').addClass("layui-btn-disabled").attr("disabled",true);
+							}
+						}else{
+							_this.result="";
+							_this.t_name="";
+							_this.t_price="";
+							_this.result0="<span class='err'>无此编号</span>"
+						}
+					},"json");
+				},
+				mname(){
+					var _this=this;
+					$.post("../user/find",{m_name:this.m_name},function(data){
+						//console.log(data);
+						if(data.length==1){
+							_this.result_m="";
+						}else{
+							_this.result_m="<span class='err'>该用户不存在</span>";
 						}
 					},"json");
 				}
+			},
+			mounted(){
+
 			}
 		});
 	</script>

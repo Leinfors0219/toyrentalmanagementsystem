@@ -49,4 +49,31 @@ public class ToyDaoImplTest {
     public void findAll() {
         toyDao.findAll();
     }
+
+    @Test
+    public void toyreturn(){
+        Toys toys=new Toys();
+        toys.setT_name("跳棋");
+        toys.setT_id(1);
+        toys.setT_num(1);
+        toys.setC_id("2");
+        toys.setT_scrap("0");
+        toyDao.toyreturn(toys);
+    }
+
+    @Test
+    public void badreturn(){
+        Toys toys=new Toys();
+        toys.setT_name("跳棋");
+        toys.setT_id(1);
+        toys.setT_num(1);
+        toys.setC_id("2");
+        toys.setT_scrap("1");
+        toyDao.badreturn(toys);
+    }
+
+    @Test
+    public void findAllbad(){
+        toyDao.findAllbad();
+    }
 }

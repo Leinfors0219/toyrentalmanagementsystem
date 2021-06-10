@@ -37,4 +37,21 @@ public class UserControllers {
         userDao.useradd(user);
         return user;
     }
+
+    @RequestMapping(value = "find")
+    public List<User> find(User user){
+        List<User> list=userDao.finduser1(user.getM_name());
+        return list;
+    }
+    @RequestMapping(value = "lease")
+    public User userlease(User user){
+        userDao.userlease(user);
+        return user;
+    }
+    @RequestMapping(value = "rec")
+    public User rec(User user){
+        userDao.recharge(user);
+        return user;
+    }
+
 }
